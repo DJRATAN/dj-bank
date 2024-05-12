@@ -28,21 +28,33 @@ const AuthForm = ({ type }: { type: string }) => {
     })
 
     // 2. Define a submit handler.
-    const onSubmit = async (data: z.infer<typeof formSchema>) {
+    const onSubmit = async (data: z.infer<typeof formSchema>) => {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
         setIsLoading(true)
         try {
             // Sign up with Appwrite & create plaid token
             if (type === 'sign-up') {
-                const newUse = await signUp(data)
-                // setUser(newUser);
+                const userData = {
+                    firstName: data.firstName!,
+                    lastName: data.lastName!,
+                    city: data.city!,
+                    state: data.state!,
+                    postalCode: data.postalCode!,
+                    dateOfBirth: data.dateOfBirth!,
+                    ssn: data.ssn!,
+                    email: data.email,
+                    password: data.password
+                }
+                const newUser = await signUp(userData)
+                setUser(newUser);
             }
             if (type === 'sign-in') {
                 const response = await signIn({
                     email: data.email,
                     password: data.password
                 })
+                console.log(response)
                 if (response) router.push('/')
             }
         } catch (error) {
