@@ -53,3 +53,13 @@ export async function getLoggedInUser() {
         return null;
     }
 }
+
+export const logoutAccount = async () => {
+    try {
+        const { account } = await createAdminClient();
+        cookies().delete('appwrite-session')
+        await account.deleteSession('current')
+    } catch (error) {
+        return null
+    }
+}
